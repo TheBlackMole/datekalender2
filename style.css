@@ -1,0 +1,238 @@
+/* =========================================================
+   UNSERE WELT – Date-Kalender (Fernbeziehungs-Edition)
+   Inhalte & Daten anpassen: ganz unten im <script> unter CONFIG / DATES / PROJEKTE
+   Vorschau mit allen Truhen offen + Vorbereitungsnotizen:  index.html?vorschau=1
+   ========================================================= */
+:root{
+  --sky-top:#0b1026; --sky-bot:#27305e;
+  --stone:#c6c6c6; --stone-hi:#ffffff; --stone-lo:#555555; --stone-dark:#373737;
+  --slot:#8b8b8b; --slot-hi:#ffffff; --slot-lo:#373737;
+  --ink:#3f3f3f; --ink-soft:#5a5a5a;
+  --xp:#80ff20; --xp-dark:#3c7d0e; --gold:#f2c94c;
+  --text-light:#f4f1e8;
+  --px: 4px;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:#1d1a17;
+  color:var(--text-light);
+  font-family:"VT323", ui-monospace, monospace;
+  font-size:22px; line-height:1.2;
+  -webkit-font-smoothing:none;
+  image-rendering:pixelated;
+}
+.h{font-family:"Press Start 2P", ui-monospace, monospace; line-height:1.5; letter-spacing:.5px}
+
+/* ---------- Header / Himmel ---------- */
+header{
+  position:relative; overflow:hidden;
+  background:linear-gradient(var(--sky-top), var(--sky-bot));
+  padding:56px 16px 120px; text-align:center;
+}
+#stars{position:absolute; inset:0; pointer-events:none}
+header .kicker, header h1, header .sub{position:relative; z-index:1}
+.star{position:absolute; width:4px; height:4px; background:#fff; opacity:.8; animation:tw 3s steps(3) infinite}
+@keyframes tw{50%{opacity:.25}}
+.moon{position:absolute; top:28px; right:8%; width:48px; height:48px; background:#f1f0dc;
+  box-shadow:inset -8px -8px 0 #d5d3b5, 0 0 0 4px rgba(241,240,220,.15)}
+header .kicker{font-size:11px; color:#b9c3ff; margin:0 0 18px}
+header h1{font-size:clamp(28px, 7vw, 56px); margin:0; color:#fff;
+  text-shadow:4px 4px 0 #3a3a3a, 0 0 0 #000}
+header h1 span{color:var(--gold)}
+header .sub{margin:18px auto 0; max-width:560px; font-size:24px; color:#dfe3ff}
+.ground{position:absolute; left:0; right:0; bottom:0; height:96px;
+  background-size:64px 64px; image-rendering:pixelated}
+
+/* ---------- Layout ---------- */
+main{max-width:1000px; margin:0 auto; padding:24px 16px 64px}
+nav.tabs{display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin:-56px 0 28px; position:relative; z-index:2}
+section{margin-bottom:40px}
+.section-title{font-size:13px; color:var(--gold); text-shadow:2px 2px 0 #000; margin:0 0 14px}
+
+/* ---------- UI-Elemente im Inventar-Stil ---------- */
+.panel{
+  background:var(--stone); color:var(--ink);
+  border:4px solid; border-color:var(--stone-hi) var(--stone-lo) var(--stone-lo) var(--stone-hi);
+  box-shadow:0 0 0 4px #000;
+  padding:18px;
+}
+.panel .h{color:var(--ink)}
+.btn{
+  font-family:"Press Start 2P", monospace; font-size:11px; color:#fff;
+  background:#6f6f6f; cursor:pointer; padding:12px 14px;
+  border:4px solid; border-color:#a8a8a8 #3c3c3c #3c3c3c #a8a8a8;
+  box-shadow:0 0 0 3px #000; text-shadow:2px 2px 0 #3a3a3a;
+}
+.btn:hover,.btn:focus-visible{background:#7b86c9; outline:none}
+.btn:active{border-color:#3c3c3c #a8a8a8 #a8a8a8 #3c3c3c}
+.btn.green{background:#4b8a2b}
+.btn.green:hover{background:#5ea83a}
+
+/* ---------- Countdown ---------- */
+.countdown{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:14px 0 18px}
+.cd-cell{background:var(--slot); text-align:center; padding:12px 4px;
+  border:4px solid; border-color:var(--slot-lo) var(--slot-hi) var(--slot-hi) var(--slot-lo)}
+.cd-num{font-family:"Press Start 2P",monospace; font-size:clamp(16px,4.5vw,28px); color:#fff; text-shadow:3px 3px 0 #3a3a3a}
+.cd-lab{font-size:20px; color:#222; margin-top:6px}
+.cd-head{display:flex; justify-content:space-between; align-items:baseline; gap:12px; flex-wrap:wrap}
+.cd-head .h{font-size:12px; margin:0}
+.cd-date{font-size:22px; color:var(--ink-soft)}
+.xp-wrap{position:relative; margin-top:6px}
+.xp-level{text-align:center; font-family:"Press Start 2P",monospace; font-size:14px; color:var(--xp);
+  text-shadow:2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000; margin-bottom:6px}
+.xp-bar{height:18px; background:#2b2b2b; border:3px solid #000; position:relative; overflow:hidden}
+.xp-fill{height:100%; width:0; background:repeating-linear-gradient(90deg, var(--xp) 0 12px, #63d018 12px 14px);
+  box-shadow:inset 0 -4px 0 var(--xp-dark); transition:width 1s steps(20)}
+.xp-note{font-size:20px; text-align:center; color:var(--ink-soft); margin-top:6px}
+.next-up{margin-top:14px; font-size:22px; text-align:center}
+
+/* ---------- Truhen ---------- */
+.grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(140px,1fr)); gap:12px}
+.slot{
+  position:relative; background:var(--slot); cursor:pointer; text-align:center;
+  border:4px solid; border-color:var(--slot-lo) var(--slot-hi) var(--slot-hi) var(--slot-lo);
+  padding:14px 6px 10px; color:#1d1d1d; font:inherit;
+  display:flex; flex-direction:column; align-items:center; gap:6px;
+}
+.slot:hover,.slot:focus-visible{background:#a3a3d8; outline:none}
+.slot svg{width:72px; height:auto; display:block}
+.slot .ep{font-family:"Press Start 2P",monospace; font-size:9px; color:#2b2b2b}
+.slot .when{font-size:20px}
+.slot .title{font-size:20px; color:#fff; text-shadow:2px 2px 0 #3a3a3a; min-height:24px}
+.slot.locked svg{filter:grayscale(.85) brightness(.75)}
+.slot.locked .title{color:#d8d8d8}
+.slot.finale{background:#9b8b5b}
+.slot.finale:hover{background:#b8a66e}
+.slot.bonus{background:#6f9a6a}
+.slot.bonus:hover{background:#86b380}
+.badge{position:absolute; top:6px; right:6px; font-family:"Press Start 2P",monospace; font-size:9px;
+  background:#000; color:var(--xp); padding:4px 5px}
+.badge.lock{color:#ddd}
+.slot.ready{animation:glow 1.2s steps(2) infinite}
+@keyframes glow{50%{background:#9e9ecf}}
+
+/* ---------- Modal ---------- */
+.modal-bg{position:fixed; inset:0; background:rgba(0,0,0,.72); display:none; align-items:center; justify-content:center; padding:16px; z-index:50}
+.modal-bg.show{display:flex}
+.modal{max-width:620px; width:100%; max-height:90vh; overflow:auto; position:relative}
+.modal .top{display:flex; gap:16px; align-items:center; margin-bottom:12px}
+.modal .top svg{width:64px; flex:none}
+.modal .ep{font-family:"Press Start 2P",monospace; font-size:10px; color:var(--ink-soft)}
+.modal h2{font-size:clamp(14px,3.6vw,20px); margin:6px 0 0}
+.modal p{font-size:24px; margin:10px 0}
+.modal .need{background:var(--slot); color:#1d1d1d; padding:10px 12px; margin:12px 0;
+  border:4px solid; border-color:var(--slot-lo) var(--slot-hi) var(--slot-hi) var(--slot-lo)}
+.modal .need b{font-family:"Press Start 2P",monospace; font-size:10px; display:block; margin-bottom:6px; color:#fff; text-shadow:2px 2px 0 #3a3a3a}
+.modal .prep{background:#3b3220; color:#ffe8a3; padding:10px 12px; margin:12px 0; border:3px dashed #ffe8a3}
+.modal .prep b{font-family:"Press Start 2P",monospace; font-size:9px; display:block; margin-bottom:6px}
+.modal .actions{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; margin-top:14px}
+.modal .locked-msg{text-align:center; padding:10px 0}
+.modal .locked-msg .big{font-family:"Press Start 2P",monospace; font-size:clamp(16px,4vw,22px); margin:14px 0; color:#fff; text-shadow:3px 3px 0 #3a3a3a}
+.opening svg{animation:pop .5s steps(4)}
+@keyframes pop{0%{transform:translateY(8px) scale(.8)}60%{transform:translateY(-6px) scale(1.1)}100%{transform:none}}
+
+/* ---------- Projekte ---------- */
+.proj-list{list-style:none; margin:0 0 14px; padding:0; display:grid; gap:8px}
+.proj{display:flex; align-items:center; gap:12px; background:var(--slot); padding:8px 10px;
+  border:4px solid; border-color:var(--slot-lo) var(--slot-hi) var(--slot-hi) var(--slot-lo); color:#1d1d1d}
+.proj input[type=checkbox]{appearance:none; -webkit-appearance:none; width:28px; height:28px; flex:none; margin:0; cursor:pointer;
+  background:#373737; border:3px solid; border-color:#1d1d1d #9a9a9a #9a9a9a #1d1d1d; position:relative}
+.proj input[type=checkbox]:checked::after{content:""; position:absolute; left:6px; top:1px; width:7px; height:14px;
+  border:solid var(--xp); border-width:0 5px 5px 0; transform:rotate(45deg)}
+.proj span{flex:1; font-size:24px}
+.proj.done span{text-decoration:line-through; color:#4a4a4a}
+.proj .del{background:none; border:0; font-family:"Press Start 2P",monospace; font-size:12px; color:#5a1a1a; cursor:pointer; padding:6px}
+.proj-add{display:flex; gap:10px; flex-wrap:wrap}
+.proj-add input{flex:1; min-width:180px; font:inherit; font-size:24px; padding:8px 10px; color:#fff; background:#000;
+  border:4px solid #a0a0a0; outline:none}
+.proj-add input:focus{border-color:#fff}
+.proj-count{font-size:22px; color:var(--ink-soft); margin:0 0 10px}
+
+/* ---------- Toast ---------- */
+.toast{position:fixed; top:16px; right:16px; z-index:60; background:#212121; padding:12px 16px 12px 12px;
+  border:3px solid #555; box-shadow:0 0 0 3px #000; display:flex; gap:12px; align-items:center;
+  transform:translateX(130%); transition:transform .35s steps(6); max-width:calc(100vw - 32px)}
+.toast.show{transform:none}
+.toast svg{width:36px; flex:none}
+.toast .t1{font-family:"Press Start 2P",monospace; font-size:10px; color:var(--gold)}
+.toast .t2{font-size:22px; color:#fff; margin-top:4px}
+
+footer{text-align:center; font-size:20px; color:#8a8172; padding:0 16px 40px}
+.preview-banner{background:#7a2d2d; color:#fff; text-align:center; padding:8px; font-family:"Press Start 2P",monospace; font-size:10px}
+
+@media (max-width:520px){
+  body{font-size:20px}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px}
+  .slot .when,.slot .title{font-size:18px}
+  .countdown{gap:6px}
+  .cd-lab{font-size:17px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important}}
+
+.blink{animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+html{-webkit-text-size-adjust:100%}
+button{-webkit-tap-highlight-color:transparent; touch-action:manipulation}
+header{padding-top:max(56px, calc(env(safe-area-inset-top) + 32px))}
+.slot{min-width:0}
+.slot .title{overflow-wrap:break-word; hyphens:auto; -webkit-hyphens:auto}
+.slot{padding-top:30px}
+.slot .ep{white-space:nowrap}
+.sync{text-align:center; font-family:"Press Start 2P",monospace; font-size:9px; margin:-12px 0 22px; color:#8a8172}
+.sync.ok{color:var(--xp)}
+.sync.off{color:#ff8a6a}
+.badge.ready{color:var(--gold)}
+.chest-big{position:relative; width:110px; margin:0 auto}
+.chest-big svg{width:100%; display:block}
+.chest-big.shake{animation:shake .7s steps(7)}
+@keyframes shake{0%,100%{transform:none}15%{transform:translate(-4px,0) rotate(-3deg)}30%{transform:translate(4px,-2px) rotate(3deg)}45%{transform:translate(-4px,0) rotate(-2deg)}60%{transform:translate(4px,-2px) rotate(2deg)}75%{transform:translate(-2px,0)}90%{transform:translate(2px,-1px)}}
+.spark{position:absolute; left:50%; top:40%; width:8px; height:8px; animation:spark .8s steps(8) forwards}
+@keyframes spark{to{transform:translate(var(--x),var(--y)); opacity:0}}
+.btn:disabled{opacity:.6; cursor:default}
+.plan span{font-size:20px; line-height:1.25}
+.plan .bis{display:block; margin-bottom:4px; font-family:"Press Start 2P",monospace; font-size:10px; color:#fff; text-shadow:2px 2px 0 #3a3a3a}
+.plan .was{font-size:20px; color:#222}
+.plan .prep-text{font-style:normal; color:#1d1d1d}
+.plan.soon{background:#c9b169}
+.plan.overdue{background:#c97a69}
+.plan.done .bis,.plan.done .was,.plan.done .prep-text{color:#4a4a4a; text-shadow:none}
+
+/* ---------- Einstiegsfenster (neutral, verrät nichts) ---------- */
+html.vorhang, html.vorhang body{background:#f4eef6; overflow:hidden}
+html.vorhang body > :not(#intro):not(#loader){visibility:hidden}
+.intro{position:fixed; inset:0; z-index:100; display:flex; align-items:flex-start; justify-content:center; -webkit-overflow-scrolling:touch;
+  padding:24px 16px; overflow:auto;
+  background:radial-gradient(120% 90% at 20% 0%, #fbf6ee 0%, #f1e7f6 55%, #e6dcef 100%);
+  -webkit-font-smoothing:antialiased; image-rendering:auto}
+.intro[hidden],.loader[hidden]{display:none}
+.intro-card{max-width:440px; width:100%; background:rgba(255,253,250,.92); border-radius:22px;
+  box-shadow:0 24px 70px rgba(70,45,95,.18), 0 2px 6px rgba(70,45,95,.06);
+  margin:auto; padding:34px 28px 28px; text-align:center; color:#3b2f47;
+  font-family:"Cormorant Garamond", Georgia, "Times New Roman", serif;
+  animation:introIn .9s cubic-bezier(.2,.7,.2,1) both; transition:opacity .5s ease, transform .5s ease}
+.intro-card.weg{opacity:0; transform:translateY(-10px) scale(.98)}
+.anemone{width:84px; height:84px; display:block; margin:0 auto 10px; animation:bloom 1.4s .2s cubic-bezier(.2,.7,.2,1) both}
+.intro h2{font-size:clamp(28px,7vw,36px); font-weight:600; margin:6px 0 12px; line-height:1.15; letter-spacing:.2px}
+.intro p{font-size:21px; line-height:1.5; margin:0 0 26px; white-space:pre-line; color:#4f4459}
+.intro button{font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size:17px; font-weight:600;
+  color:#fff; background:#7650a0; border:0; border-radius:999px; padding:14px 30px; cursor:pointer;
+  box-shadow:0 8px 22px rgba(118,80,160,.3); transition:transform .15s ease, background .15s ease}
+.intro button:hover,.intro button:focus-visible{background:#64428b; outline:none; transform:translateY(-1px)}
+.intro button:active{transform:translateY(1px)}
+@keyframes introIn{from{opacity:0; transform:translateY(14px)}}
+@keyframes bloom{from{opacity:0; transform:scale(.6) rotate(-25deg)}}
+
+/* ---------- Übergang: Welt wird generiert ---------- */
+.loader{position:fixed; inset:0; z-index:99; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:18px; padding:16px; background-color:#3b2a1c; background-size:64px 64px; image-rendering:pixelated;
+  box-shadow:inset 0 0 0 100vmax rgba(0,0,0,.45); color:#fff; text-align:center; transition:opacity .6s steps(6)}
+.loader.weg{opacity:0}
+.load-title{font-size:clamp(12px,3.6vw,18px); margin:0; text-shadow:3px 3px 0 #3a3a3a}
+.load-bar{width:min(320px,80vw); height:14px; background:#2b2b2b; border:3px solid #000}
+.load-bar > div{height:100%; width:0; background:var(--xp); box-shadow:inset 0 -4px 0 var(--xp-dark); transition:width 2.4s steps(24)}
+.load-sub{font-size:22px; margin:0; color:#d6d6d6; min-height:26px}
+@media (prefers-reduced-motion:reduce){.load-bar > div{transition:none}}
+.intro-card{max-width:520px}
+.intro #introText{white-space:pre-wrap; text-align:left; margin-bottom:18px; font-size:20px}
+.intro .gruss{text-align:right; font-style:italic; font-size:22px; margin:0 0 26px; color:#3b2f47}

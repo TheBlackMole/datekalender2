@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="de" class="vorhang">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" id="themeColor" content="#f4eef6">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Unsere Welt">
+<!-- Neutrales Icon und Titel, bis das Einstiegsfenster bestätigt ist (script.js tauscht sie danach aus) -->
+<link rel="icon" id="favicon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23a77bd8' d='M16 28S5 21 5 13a6 6 0 0 1 11-3.3A6 6 0 0 1 27 13c0 8-11 15-11 15z'/%3E%3C/svg%3E">
+<title>Für dich</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<!-- Einstiegsfenster: bewusst neutral gestaltet -->
+<div id="intro" class="intro" role="dialog" aria-modal="true" aria-labelledby="introTitle" hidden>
+  <div class="intro-card" id="introCard">
+    <svg class="anemone" viewBox="0 0 120 120" aria-hidden="true">
+      <defs>
+        <radialGradient id="pet" cx="50%" cy="85%" r="80%"><stop offset="0" stop-color="#5b3b7e"/><stop offset=".45" stop-color="#9a72c9"/><stop offset="1" stop-color="#d9c6f0"/></radialGradient>
+      </defs>
+      <g fill="url(#pet)">
+        <ellipse cx="60" cy="31" rx="17" ry="27"/>
+        <ellipse cx="60" cy="31" rx="17" ry="27" transform="rotate(60 60 60)"/>
+        <ellipse cx="60" cy="31" rx="17" ry="27" transform="rotate(120 60 60)"/>
+        <ellipse cx="60" cy="31" rx="17" ry="27" transform="rotate(180 60 60)"/>
+        <ellipse cx="60" cy="31" rx="17" ry="27" transform="rotate(240 60 60)"/>
+        <ellipse cx="60" cy="31" rx="17" ry="27" transform="rotate(300 60 60)"/>
+      </g>
+      <circle cx="60" cy="60" r="15" fill="#2f3b2a"/>
+      <g fill="#1b1f19">
+        <circle cx="60" cy="41" r="2.4"/><circle cx="73.4" cy="46.6" r="2.4"/><circle cx="79" cy="60" r="2.4"/><circle cx="73.4" cy="73.4" r="2.4"/>
+        <circle cx="60" cy="79" r="2.4"/><circle cx="46.6" cy="73.4" r="2.4"/><circle cx="41" cy="60" r="2.4"/><circle cx="46.6" cy="46.6" r="2.4"/>
+      </g>
+      <circle cx="60" cy="60" r="7" fill="#7fa36a"/>
+    </svg>
+    <h2 id="introTitle"></h2>
+    <p id="introText"></p>
+    <p id="introGruss" class="gruss" hidden></p>
+    <button id="introBtn" type="button"></button>
+  </div>
+</div>
+<div id="loader" class="loader" hidden>
+  <p class="h load-title">Welt wird generiert</p>
+  <div class="load-bar"><div id="loadFill"></div></div>
+  <p class="load-sub" id="loadSub"></p>
+</div>
+
+<div id="previewBanner" class="preview-banner" hidden>VORSCHAU-MODUS: alle Truhen offen, Notizen für Leon sichtbar</div>
+
+<header>
+  <div id="stars"></div>
+  <div class="moon"></div>
+  <p class="kicker h">NEUE WELT WIRD GENERIERT<span class="blink">_</span></p>
+  <h1 class="h">UNSERE <span>WELT</span></h1>
+  <p class="sub" id="subline">Du bist vlt nicht mehr direkt hier, aber wir haben trotzdem unsere eigene Welt. Alle zwei Wochen taucht hier eine neue Truhe auf, und in jeder steckt ein Date für uns zwei :)</p>
+  <div class="ground" id="ground"></div>
+</header>
+
+<main>
+  <nav class="tabs">
+    <button class="btn" data-go="countdown">Countdown</button>
+    <button class="btn" data-go="truhen">Truhen</button>
+    <button class="btn" data-go="projekte">Projekte</button>
+  </nav>
+
+  <p class="sync" id="syncStatus"></p>
+
+  <section id="planung" hidden>
+    <h2 class="section-title h">&gt; PLANUNG FÜR LEON</h2>
+    <div class="panel">
+      <p class="proj-count" id="planCount"></p>
+      <ul class="proj-list" id="planList"></ul>
+    </div>
+  </section>
+
+  <section id="countdown">
+    <h2 class="section-title h">&gt; BIS ZUM WIEDERSEHEN</h2>
+    <div class="panel">
+      <div class="cd-head">
+        <p class="h" id="cdLabel">Noch</p>
+        <span class="cd-date" id="cdDate"></span>
+      </div>
+      <div class="countdown">
+        <div class="cd-cell"><div class="cd-num" id="cdD">0</div><div class="cd-lab">Tage</div></div>
+        <div class="cd-cell"><div class="cd-num" id="cdH">00</div><div class="cd-lab">Stunden</div></div>
+        <div class="cd-cell"><div class="cd-num" id="cdM">00</div><div class="cd-lab">Minuten</div></div>
+        <div class="cd-cell"><div class="cd-num" id="cdS">00</div><div class="cd-lab">Sekunden</div></div>
+      </div>
+      <div class="xp-wrap">
+        <div class="xp-level" id="xpLevel">0</div>
+        <div class="xp-bar"><div class="xp-fill" id="xpFill"></div></div>
+        <div class="xp-note" id="xpNote"></div>
+      </div>
+      <div class="next-up" id="nextUp"></div>
+    </div>
+  </section>
+
+  <section id="truhen">
+    <h2 class="section-title h">&gt; DIE TRUHEN</h2>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section id="projekte">
+    <h2 class="section-title h">&gt; UNSERE BAUPROJEKTE</h2>
+    <div class="panel">
+      <p class="proj-count" id="projCount"></p>
+      <ul class="proj-list" id="projList"></ul>
+      <form class="proj-add" id="projForm">
+        <input id="projInput" type="text" maxlength="80" placeholder="Neues Projekt …" autocomplete="off">
+        <button class="btn green" type="submit">Hinzufügen</button>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer id="footer">Gebaut für dich, Block für Block.</footer>
+
+<div class="modal-bg" id="modalBg" role="dialog" aria-modal="true">
+  <div class="panel modal" id="modal"></div>
+</div>
+
+<div class="toast" id="toast" aria-live="polite">
+  <div id="toastIcon"></div>
+  <div><div class="t1" id="toastTitle">Erfolg erzielt!</div><div class="t2" id="toastText"></div></div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
