@@ -48,7 +48,7 @@ const CONFIG = {
    vorlauf = so viele Tage vor dem Date sollte die Vorbereitung erledigt sein (für deine Planungsliste). */
 const DATES = [
   { d:"2026-11-07", vorlauf:2, icon:"block",  t:"Spawnpunkt",
-    text:"Unser erster Abend in der neuen Welt. Log dich ein und schau dich am Spawn gut um, vielleicht wartet da schon etwas auf dich. Danach suchen wir uns zusammen den perfekten Platz für unsere erste Basis.",
+    text:"Unser erster Abend in unserer neuen Welt. Heißt für uns: Einloggen, umschauen und unser erstes gemeinsames Bauprojekt starten! Und Augen auf, vlt findest du ja auch den ein oder anderes Schatz... ;)",
     need:"iPad, Kopfhörer, Snacks",
     prep:"Vorher am Spawn eine Überraschung bauen und Bücher mit kleinen Briefen in eine Truhe legen." },
   { d:"2026-11-21", vorlauf:5, icon:"cake",   t:"Kochduell auf Distanz",
